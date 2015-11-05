@@ -4,23 +4,43 @@
 
 # Flash programming wrapper/helper script (using OpenOCD flash commands)
 
+import os, sys, platform, getopt, subprocess
 from sys import platform as _platform
-import os, sys, platform, getopt
 
 IFC_FILE = "ftdi.cfg"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# We define which as it may not be available on Windows
+def which(program):
+    if _platform == "win32" or _platform == "win64":
+        program = program + '.exe'
+
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+    return ""
+
 if _platform == "linux" or _platform == "linux2":
     if (platform.machine() == "i686"):
-        OPENOCD_PATH = os.path.dirname(os.path.abspath(__file__)) + "/Linux/openocd"
+        OPENOCD_PATH = which(SCRIPT_DIR + "/Linux/openocd")
     else:
-        OPENOCD_PATH = os.path.dirname(os.path.abspath(__file__)) + "/Linux/openocd64"
+        OPENOCD_PATH = which(SCRIPT_DIR + "/Linux/openocd64")
 elif _platform == "darwin":
-    OPENOCD_PATH = os.popen('which openocd').read().rstrip()
+    OPENOCD_PATH = which("openocd")
 elif _platform == "win32" or _platform == "win64":
-    OPENOCD_PATH = os.path.dirname(os.path.abspath(__file__)) + "/Windows/openocd.exe"
+    OPENOCD_PATH = which(SCRIPT_DIR + "/Windows/openocd")
 
-if (os.path.exists(OPENOCD_PATH) == False):
+if not len(OPENOCD_PATH):
     print "Error: Please install OpenOCD for your platform"
     sys.exit()
 
@@ -55,7 +75,9 @@ def flash_file(addr, msg, upload_file):
         print "Error: Could not find file", upload_file
         exit()
     print msg
-    p = os.system(OPENOCD_PATH + " -s " + SCRIPT_DIR + "/interface -f " + IFC_FILE + " -s " + SCRIPT_DIR + " -f config.cfg -f openocd.cfg -c init -c \"program_image "+ addr + " " + upload_file + "\" -c shutdown")
+
+    print "Using OpenOCD interface file", IFC_FILE
+    p = subprocess.call([OPENOCD_PATH, '-s', SCRIPT_DIR + '/interface', '-f', IFC_FILE, '-s', SCRIPT_DIR, '-f', 'config.cfg', '-f', 'openocd.cfg', '-c', ' init', '-c', 'program_image ' + addr + ' ' + upload_file , '-c', 'shutdown'])
     if (p==0):
         print msg + " done..."
     else:
@@ -67,6 +89,8 @@ if len(sys.argv) <= 1:
 else:
     try:
         opts, args = getopt.getopt(sys.argv[1:], "f:", ["flash=","mcufw="])
+        if len(args):
+            exit()
     except getopt.GetoptError:
         exit()
 
