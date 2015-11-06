@@ -1,5 +1,5 @@
 # Marvell's Starter SDK for AWS IoT Service
 
-Welcome and thanks for checking-in. The SDK will be available shortly.
+Thanks for trying out Marvell's AWS IoT Starter Kit. The AWS IoT Starter SDK in conjunction with the AWS IoT Starter Kit provide embedded developers a way to quickly develop and prototype Wi-Fi connected embedded products that interface with peripherals over the UART, I2C, SPI, GPIO and other such interfaces at one end, and talk to the AWS IoT service at the other.
 
-If you have access to Marvell's AWS IoT Starter Kit, please refer to the [Getting Started Guide] (https://github.com/marvell-iot/aws_starter_sdk/wiki)
+Please refer to our [documentation] (https://github.com/marvell-iot/aws_starter_sdk/wiki) for getting started.
