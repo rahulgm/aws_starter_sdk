@@ -8,6 +8,6 @@ set $pc = 0x100000
 si
 end
 document hf_restore
-Restores the hard-fault context
+Restores cpu context to the instruction that caused the hard fault
 end
 
