@@ -10,8 +10,7 @@
  * A typical UART device usage scenario is as follows:
  *
  * -# Verify that board file API board_uart_pin_config() located at
- *  wmsdk_bundle-x.y.z/wmsdk/src/boards/board_file.c
- *  reflects the correct pinmux settings.
+ *  wmsdk/src/boards/{board_file}.c reflects the correct pinmux settings.
  *  If found missing, please add the appropriate pinmux configuration
  *  corresponding to the UART_ID.
  *  * -# Initialize the UART driver using uart_drv_init().
