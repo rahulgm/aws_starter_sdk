@@ -7,8 +7,7 @@
  *  modified/implemented according to the actual
  *  board specifications.
  *
- *  Please verify that board.c file found under
- *  wmsdk_bundle-x.y.z/wmsdk/src/boards/board_file.c
+ *  Please verify that {board_file}.c file found under wmsdk/src/boards/
  *  reflects the correct hardware configuration for the project.
  */
 /*
