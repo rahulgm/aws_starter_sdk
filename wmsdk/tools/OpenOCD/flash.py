@@ -71,8 +71,10 @@ def print_usage():
     print "          Program entire flash"
     print " [-h | --help] "
     print "          Display usage"
+    print " [-r | --reset]"
+    print "          Reset board"
     sys.stdout.flush()
-
+    
 def flash_file(addr, msg, upload_file):
     if (os.path.isfile(upload_file) == False):
         print "Error: Could not find file", upload_file
@@ -89,10 +91,26 @@ def flash_file(addr, msg, upload_file):
         print msg + " failed..."
     sys.stdout.flush()
 
+def reset_board():
+    print 'Reset board'
+    
+    print "Using OpenOCD interface file", IFC_FILE
+    p = subprocess.call([OPENOCD_PATH, '-s', SCRIPT_DIR + '/interface', '-f', IFC_FILE, '-s', SCRIPT_DIR, '-f', 'openocd.cfg', '-c', ' init', '-c', 'reset','-c', 'shutdown'])
+    if (p==0):
+        print  " done..."
+    else:
+        print " failed..."
+
+        
 if len(sys.argv) <= 1:
     exit()
 
+
 else:
+    if ("-r" in sys.argv) or ("--reset" in sys.argv):
+        reset_board()
+        sys.exit()
+        
     try:
         opts, args = getopt.getopt(sys.argv[1:], "f:", ["flash=","mcufw="])
         if len(args):
