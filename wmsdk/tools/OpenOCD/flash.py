@@ -69,17 +69,17 @@ def print_usage():
     print "          Write MCU firmware binary <bin> to flash"
     print " [<-f | --flash> </path/to/flash_blob>]"
     print "          Program entire flash"
-    print " [-h | --help] "
-    print "          Display usage"
     print " [-r | --reset]"
     print "          Reset board"
+    print " [-h | --help] "
+    print "          Display usage"
     sys.stdout.flush()
 
 def flash_file(addr, msg, upload_file):
     if (os.path.isfile(upload_file) == False):
         print "Error: Could not find file", upload_file
         exit()
-    print msg
+    print msg + "..."
 
     print "Using OpenOCD interface file", IFC_FILE
     sys.stdout.flush()
@@ -92,27 +92,25 @@ def flash_file(addr, msg, upload_file):
     sys.stdout.flush()
 
 def reset_board():
-    print 'Reset board'
-    
-    print "Using OpenOCD interface file", IFC_FILE
-    p = subprocess.call([OPENOCD_PATH, '-s', SCRIPT_DIR + '/interface', '-f', IFC_FILE, '-s', SCRIPT_DIR, '-f', 'openocd.cfg', '-c', ' init', '-c', 'reset','-c', 'shutdown'])
-    if (p==0):
-        print  " done..."
-    else:
-        print " failed..."
+    msg = "Resetting board"
+    print msg + "..."
 
-        
+    print "Using OpenOCD interface file", IFC_FILE
+    sys.stdout.flush()
+    p = subprocess.call([OPENOCD_PATH, '-s', SCRIPT_DIR + '/interface', '-f', IFC_FILE, '-s', SCRIPT_DIR, '-f', 'openocd.cfg', '-c', 'init', '-c', 'reset', '-c', 'shutdown'])
+    sys.stderr.flush()
+    if (p==0):
+        print msg + " done..."
+    else:
+        print msg + " failed..."
+    sys.stdout.flush()
+
 if len(sys.argv) <= 1:
     exit()
 
-
 else:
-    if ("-r" in sys.argv) or ("--reset" in sys.argv):
-        reset_board()
-        sys.exit()
-        
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "f:", ["flash=","mcufw="])
+        opts, args = getopt.getopt(sys.argv[1:], "f:r", ["flash=","mcufw=","reset"])
         if len(args):
             exit()
     except getopt.GetoptError:
@@ -132,3 +130,6 @@ else:
         flash_file("0x10000", "Writing MCU firmware to flash", os.path.abspath(sys.argv[index + 1]).replace('\\', '/'))
 
     cleanup()
+
+    if ("-r" in sys.argv) or ("--reset" in sys.argv):
+        reset_board()
