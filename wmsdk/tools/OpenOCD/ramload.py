@@ -3,6 +3,8 @@
 # All Rights Reserved.
 
 # Load application to ram helper script
+# Note: sys.stdout.flush() and sys.stderr.flush() are required for proper
+# console output in eclipse
 
 import os, sys, platform, getopt, subprocess
 from sys import platform as _platform
@@ -51,6 +53,7 @@ def print_usage():
 	print "Usage: ./ramload.py <app.axf> [options]"
 	print "Optional Usage:"
 	print "[-s | --semihosting] Enable semihosting based console output"
+	sys.stdout.flush()
 
 if len(sys.argv) <= 1:
     print_usage()
@@ -99,8 +102,10 @@ if ((int(entry_point, 16) & 0x1f000000) == 0x1f000000):
     sys.exit()
 
 print "Using OpenOCD interface file", IFC_FILE
+sys.stdout.flush()
 
 if SEMIHOST is False:
     subprocess.call ([OPENOCD_PATH, '-s', SCRIPT_DIR + '/interface', '-f', IFC_FILE, '-s', SCRIPT_DIR, '-f','openocd.cfg', '-c', 'init', '-c', 'load ' + FILE + ' ' + str(entry_point) + ' ', '-c', 'shutdown'])
 else:
     subprocess.call ([OPENOCD_PATH, '-s', SCRIPT_DIR + '/interface', '-f', IFC_FILE, '-s', SCRIPT_DIR, '-f','openocd.cfg', '-c', 'init', '-c', 'sh_load ' + FILE + ' ' + str(entry_point)])
+sys.stderr.flush()

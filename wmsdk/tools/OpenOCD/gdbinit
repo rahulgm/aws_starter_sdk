@@ -1,5 +1,5 @@
 #target extended-remote localhost:3333
-target extended-remote | wmsdk/tools/OpenOCD/openocd.sh
+target extended-remote | python wmsdk/tools/OpenOCD/openocd.py
 
 source wmsdk/tools/OpenOCD/gdbcommands
 

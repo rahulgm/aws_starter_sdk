@@ -15,8 +15,7 @@
  * @section mdev_ssp_usage Usage
  *
  * -# Verify that board file API board_ssp_pin_config() located at
- *  wmsdk-bundle-x.x.x/wmsdk-x.x.x/src/boards/{board_file}.c
- *  reflects the correct pinmux settings.
+ *  wmsdk/src/boards/{board_file}.c reflects the correct pinmux settings.
  *  If found missing, please add the appropriate pinmux configuration
  *  corresponding to the SSP_ID_Type.
 
